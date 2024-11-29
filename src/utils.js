@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+const canvasUtils = require('./misc/canvasUtils');
 
 const dbConfig = {
     host: process.env.DB_HOST,
@@ -8,7 +9,6 @@ const dbConfig = {
     database: process.env.DB_NAME
 }
 const dbPool = mysql.createPool(dbConfig);
-
 async function SQLQuery(sql, values) {
     const connection = await dbPool.getConnection();
     try {
@@ -22,25 +22,89 @@ async function SQLQuery(sql, values) {
     }
 }
 
-function drawLabelsAndValues(ctx, data, xLeft, xRight, startY, lineHeight) {
-    //  ctx.font = "16px Arial";
-    ctx.textBaseline = "top";
+
+function getSectionObject(sectionName, data) {
+    
+    let section;
+    switch (sectionName.toLowerCase()) {
+        case 'generic':
+            section = [
+                { label: "AC:", value: data.ac },
+                { label: "HP:", value: data.hp },
+                { label: "Mana:", value: data.mana },
+                { label: "End:", value: data.endur },
+                { label: "Haste:", value: data.haste }
+            ].filter(entry => entry.value !== 0);
+            break;
+        case 'stats':
+            section = [
+                { label: "Strength:", value: data.astr, heroic: `+${data.heroic_str}` },
+                { label: "Stamina:", value: data.asta, heroic: `+${data.heroic_sta}` },
+                { label: "Intelligence:", value: data.aint, heroic: `+${data.heroic_int}` },
+                { label: "Wisdom:", value: data.awis, heroic: `+${data.heroic_wis}` },
+                { label: "Agility:", value: data.aagi, heroic: `+${data.heroic_agi}` },
+                { label: "Dexterity:", value: data.adex, heroic: `+${data.heroic_dex}` },
+                { label: "Charisma:", value: data.acha, heroic: `+${data.heroic_cha}` },
+            ].filter(entry => entry.value !== 0);
+            break;
+        case 'resists':
+            section = [
+                { label: "Magic:", value: data.mr, heroic: `+${data.heroic_mr}` },
+                { label: "Fire:", value: data.fr, heroic: `+${data.heroic_fr}` },
+                { label: "Cold:", value: data.cr, heroic: `+${data.heroic_cr}` },
+                { label: "Disease:", value: data.dr, heroic: `+${data.heroic_dr}` },
+                { label: "Poison:", value: data.pr, heroic: `+${data.heroic_pr}` },
+                { label: "Corruption:", value: data.svcorruption, heroic: `+${data.heroic_svcorrup}` }
+            ].filter(entry => entry.value !== 0);
+            break;
+        case 'modstats':
+            section = [
+                { label: "Attack:", value: data.attack },
+                { label: "Accuracy:", value: data.accuracy },
+                { label: "Heal Amount:", value: data.healamt },
+                { label: "Spell Damage:", value: data.spelldmg },
+                { label: "HP Regen:", value: data.regen },
+                { label: "Mana Regen:", value: data.manaregen },
+                { label: "End Regen:", value: data.enduranceregen },
+                { label: "Avoidance:", value: data.avoidance },
+                { label: "Shielding:", value: data.shielding },
+                { label: "DoT Shielding:", value: data.dotshielding },
+                { label: "Stun Resist:", value: data.stunresist },
+                { label: "Spell Shield:", value: data.spellshield },
+                { label: "Damage Shield:", value: data.damageshield },
+                { label: "DS Mitigation:", value: data.dsmitigation },
+                { label: "clairvoyance:", value: data.clairvoyance },
+                { label: "Strikethrough:", value: data.strikethrough },
+                { label: "Combat Effects:", value: data.combateffects },
+            ].filter(entry => entry.value !== 0 && entry.value !== '0');
+            break;
+        case 'size':
+            let itemSize = getItemSize(data.size);
+            let itemWeight = getItemWeight(data.weight);
+            section = [
+                { label: "Size:", value: itemSize },
+                { label: "Weight:", value: itemWeight },
+
+            ].filter(entry => entry.value !== 0);
+            break;
+    }
+    return section;
+}
 
 
+
+function drawLabelsAndValues(canvas, data, xLeft, xRight, startY, lineHeight) {
     data.forEach((item, index) => {
         const y = startY + index * lineHeight;
-
         if (item.label != null) {
-            // Draw label (left aligned)
-            ctx.textAlign = "left";
-            ctx.fillText(item.label, xLeft, y);
+            canvasUtils.drawText(canvas, item.label, "42", "Times New Roman", "left", xLeft, y, "#FFFFFF");
         }
         if (item.value != null) {
-            // Draw value (right aligned)
-            ctx.textAlign = "right";
-            ctx.fillText(item.value, xRight, y);
+            canvasUtils.drawText(canvas, item.value, "42", "Times New Roman", "right", xRight, y, "#FFFFFF");
         }
-
+        if (item.heroic != null) {
+            canvasUtils.drawText(canvas, item.heroic, "38", "Times New Roman", "left", (xRight + 10), (y - 4), "#c9bd85");
+        }
     });
 }
 function getItemClasses(bitmask) {
@@ -153,5 +217,6 @@ module.exports = {
     getItemSlots: getItemSlots,
     getItemSize: getItemSize,
     getItemWeight: getItemWeight,
-    drawLabelsAndValues: drawLabelsAndValues
+    drawLabelsAndValues: drawLabelsAndValues,
+    getSectionObject: getSectionObject
 }
