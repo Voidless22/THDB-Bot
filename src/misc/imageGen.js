@@ -29,9 +29,9 @@ async function drawItemInfo(canvas, data) {
     const leftColumnX = 150;
     const leftColumnWidth = 455;
     const topLeftColumnY = 465;
-    const midLeftColumnY = 740;
+    const midColumnY = 740;
 
-    const centerColX = 580;
+    const centerColX = 620;
     const centerColY = 465;
     const centerColWidth = 905;
 
@@ -49,9 +49,9 @@ async function drawItemInfo(canvas, data) {
     canvasUtils.drawText(canvas, `${itemSlots.join(' ')}`, "40", "Times New Roman", "left", 240, 365, "#FFFFFF");
 
     utils.drawLabelsAndValues(canvas, utils.getSectionObject("Size", data), leftColumnX, leftColumnWidth, topLeftColumnY, 50)
-    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Stats", data), leftColumnX, leftColumnWidth, midLeftColumnY, 60);
+    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Stats", data), leftColumnX, leftColumnWidth, midColumnY, 60);
     utils.drawLabelsAndValues(canvas, utils.getSectionObject("Generic", data), centerColX, centerColWidth, centerColY, 60);
-    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Resists", data), centerColX, centerColWidth, centerColY, 60);
+    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Resists", data), centerColX, centerColWidth, midColumnY, 60);
     utils.drawLabelsAndValues(canvas, utils.getSectionObject("modStats", data), rightColumnX, rightColumnWidth, rightColumnY, 60);
 
 }
