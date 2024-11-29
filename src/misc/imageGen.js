@@ -25,34 +25,36 @@ async function drawItemInfo(canvas, data) {
     let itemRaces = utils.getItemRaces(data.races);
     let itemSlots = utils.getItemSlots(data.slots);
 
+    let normalFontSize = 48;
+    let heroicFontSize = 42
+
     let descriptorText = '';
+    const midColumnY = 740;
+    const topColumnY = 500;
+
     const leftColumnX = 150;
     const leftColumnWidth = 455;
-    const topLeftColumnY = 465;
-    const midColumnY = 740;
 
-    const centerColX = 620;
-    const centerColY = 465;
+    const centerColX = 650;
     const centerColWidth = 905;
 
     const rightColumnX = 1100;
     const rightColumnWidth = 1415;
-    const rightColumnY = 740;
 
 
     canvasUtils.drawStrokedRect(context, 50, 420, (canvas.width - 100), (canvas.height - 460), "#c9bd85", 6);
-    canvasUtils.drawText(canvas, data.Name, "48", "Times New Roman", "left", 235, 180, "#FFFFFF");
+    canvasUtils.drawText(canvas, data.Name, 52, "Times New Roman", "left", 235, 180, "#FFFFFF");
 
-    canvasUtils.drawText(canvas, descriptorText, "40", "Times New Roman", "left", 240, 230, "#FFFFFF");
-    canvasUtils.drawText(canvas, `Classes: ${itemClasses.join(' ')}`, "40", "Times New Roman", "left", 240, 275, "#FFFFFF");
-    canvasUtils.drawText(canvas, `Races: ${itemRaces.join(' ')}`, "40", "Times New Roman", "left", 240, 320, "#FFFFFF");
-    canvasUtils.drawText(canvas, `${itemSlots.join(' ')}`, "40", "Times New Roman", "left", 240, 365, "#FFFFFF");
+    canvasUtils.drawText(canvas, descriptorText, normalFontSize, "Times New Roman", "left", 240, 230, "#FFFFFF");
+    canvasUtils.drawText(canvas, `Classes: ${itemClasses.join(' ')}`, normalFontSize, "Times New Roman", "left", 240, 275, "#FFFFFF");
+    canvasUtils.drawText(canvas, `Races: ${itemRaces.join(' ')}`, normalFontSize, "Times New Roman", "left", 240, 320, "#FFFFFF");
+    canvasUtils.drawText(canvas, `${itemSlots.join(' ')}`, normalFontSize, "Times New Roman", "left", 240, 365, "#FFFFFF");
 
-    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Size", data), leftColumnX, leftColumnWidth, topLeftColumnY, 50)
-    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Stats", data), leftColumnX, leftColumnWidth, midColumnY, 60);
-    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Generic", data), centerColX, centerColWidth, centerColY, 60);
-    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Resists", data), centerColX, centerColWidth, midColumnY, 60);
-    utils.drawLabelsAndValues(canvas, utils.getSectionObject("modStats", data), rightColumnX, rightColumnWidth, rightColumnY, 60);
+    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Size", data), leftColumnX, leftColumnWidth, topColumnY, 50, normalFontSize, heroicFontSize)
+    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Stats", data), leftColumnX, leftColumnWidth, midColumnY, 60, normalFontSize, heroicFontSize);
+    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Generic", data), centerColX, centerColWidth, topColumnY, 60, normalFontSize, heroicFontSize);
+    utils.drawLabelsAndValues(canvas, utils.getSectionObject("Resists", data), centerColX, centerColWidth, midColumnY, 60, normalFontSize, heroicFontSize);
+    utils.drawLabelsAndValues(canvas, utils.getSectionObject("modStats", data), rightColumnX, rightColumnWidth, midColumnY, 60, normalFontSize, heroicFontSize);
 
 }
 

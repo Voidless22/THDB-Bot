@@ -93,17 +93,17 @@ function getSectionObject(sectionName, data) {
 
 
 
-function drawLabelsAndValues(canvas, data, xLeft, xRight, startY, lineHeight) {
+function drawLabelsAndValues(canvas, data, xLeft, xRight, startY, lineHeight, normalFontSize, heroicFontSize) {
     data.forEach((item, index) => {
         const y = startY + index * lineHeight;
         if (item.label != null) {
-            canvasUtils.drawText(canvas, item.label, "42", "Times New Roman", "left", xLeft, y, "#FFFFFF");
+            canvasUtils.drawText(canvas, item.label, normalFontSize, "Times New Roman", "left", xLeft, y, "#FFFFFF");
         }
         if (item.value != null) {
-            canvasUtils.drawText(canvas, item.value, "42", "Times New Roman", "right", xRight, y, "#FFFFFF");
+            canvasUtils.drawText(canvas, item.value, normalFontSize, "Times New Roman", "right", xRight, y, "#FFFFFF");
         }
         if (item.heroic != null) {
-            canvasUtils.drawText(canvas, item.heroic, "38", "Times New Roman", "left", (xRight + 10), (y - 4), "#c9bd85");
+            canvasUtils.drawText(canvas, item.heroic, heroicFontSize, "Times New Roman", "left", (xRight + 10), (y - 4), "#c9bd85");
         }
     });
 }
