@@ -1,0 +1,85 @@
+-name: done
+-magic: done
+-attunable: done
+-icon: done
+-classes: done
+-races: done
+-slot(s): done
+-size: done
+-weight: done
+-agi: done	
+-ac: done
+-cha: done	
+-dex: done 
+-sta: done	
+-str: done
+-hp: done	
+-mana: done
+-endur: done	
+-haste: done
+-attack: done		
+-avoidance: done
+-accuracy: done		
+-regen: done
+-shielding: done	
+-damageshield: done
+-dotshielding: done	
+-manaregen: done
+-enduranceregen: done	
+-spellshield: done
+-stunresist: done	
+-strikethrough: done
+-healamt: done		
+-spelldmg: done
+-clairvoyance: done	
+-dsmitigation: done
+-combateffects: done
+-cr: Done	
+-fr: Done
+-dr: Done
+-mr: Done
+-pr: Done	
+-svcorruption: Done
+-heroic_str: Done	
+-heroic_agi: Done
+-heroic_dex: Done	
+-heroic_sta: Done
+-heroic_cha: Done	
+-heroic_svcorrup: Done
+-heroic_pr: Done	
+-heroic_dr: Done
+-heroic_fr: Done	
+-heroic_cr: Done
+-heroic_mr: Done
+-diety: Done
+-damage: done
+-range: done
+-itemtype:
+-delay: done
+-augslot1type: done
+-augslot2type:done
+-augslot3type:done
+-augslot4type:done
+-augslot5type:done
+-augslot6type:done
+-augslot1visible:done
+-augslot2visible:done
+-augslot3visible:done
+-augslot4visible:done
+-augslot5visible:done
+-clicktype:
+-clicklevel2:
+-clickeffect:
+-maxcharges:
+
+-worneffect: worn id
+-wornlevel2: worn lvl cap
+-clickeffect
+-proc
+-focuseffect: focus id
+-focuslevel2: focus cap
+
+
+
+
+

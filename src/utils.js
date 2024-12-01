@@ -24,7 +24,7 @@ async function SQLQuery(sql, values) {
 
 
 function getSectionObject(sectionName, data) {
-    
+
     let section;
     switch (sectionName.toLowerCase()) {
         case 'generic':
@@ -33,8 +33,8 @@ function getSectionObject(sectionName, data) {
                 { label: "HP:", value: data.hp },
                 { label: "Mana:", value: data.mana },
                 { label: "End:", value: data.endur },
-                { label: "Haste:", value: data.haste }
-            ].filter(entry => entry.value !== 0);
+                { label: "Haste:", value: `${data.haste}%` }
+            ].filter(entry => entry.value !== 0 && entry.value !== '0%' && entry !== null);
             break;
         case 'stats':
             section = [
@@ -45,7 +45,7 @@ function getSectionObject(sectionName, data) {
                 { label: "Agility:", value: data.aagi, heroic: `+${data.heroic_agi}` },
                 { label: "Dexterity:", value: data.adex, heroic: `+${data.heroic_dex}` },
                 { label: "Charisma:", value: data.acha, heroic: `+${data.heroic_cha}` },
-            ].filter(entry => entry.value !== 0);
+            ].filter(entry => entry.value !== 0 && entry !== null);
             break;
         case 'resists':
             section = [
@@ -55,7 +55,7 @@ function getSectionObject(sectionName, data) {
                 { label: "Disease:", value: data.dr, heroic: `+${data.heroic_dr}` },
                 { label: "Poison:", value: data.pr, heroic: `+${data.heroic_pr}` },
                 { label: "Corruption:", value: data.svcorruption, heroic: `+${data.heroic_svcorrup}` }
-            ].filter(entry => entry.value !== 0);
+            ].filter(entry => entry.value !== 0 && entry !== null);
             break;
         case 'modstats':
             section = [
@@ -76,7 +76,7 @@ function getSectionObject(sectionName, data) {
                 { label: "clairvoyance:", value: data.clairvoyance },
                 { label: "Strikethrough:", value: data.strikethrough },
                 { label: "Combat Effects:", value: data.combateffects },
-            ].filter(entry => entry.value !== 0 && entry.value !== '0');
+            ].filter(entry => entry.value !== 0 && entry.value !== '0' && entry !== null);
             break;
         case 'size':
             let itemSize = getItemSize(data.size);
@@ -85,13 +85,43 @@ function getSectionObject(sectionName, data) {
                 { label: "Size:", value: itemSize },
                 { label: "Weight:", value: itemWeight },
 
-            ].filter(entry => entry.value !== 0);
+            ].filter(entry => entry.value !== 0 && entry !== null);
+            break;
+        case 'weapon':
+            section = [
+                { label: "Damage:", value: data.damage },
+                { label: "Delay:", value: data.delay },
+                { label: "Range:", value: data.range },
+
+            ].filter(entry => entry.value !== 0 && entry !== null);
+            break;
+        case 'augs':
+            section = [
+                { visible: data.augslot1visible, augtype: data.augslot1type },
+                { visible: data.augslot2visible, augtype: data.augslot2type },
+                { visible: data.augslot3visible, augtype: data.augslot3type },
+                { visible: data.augslot4visible, augtype: data.augslot4type },
+                { visible: data.augslot5visible, augtype: data.augslot5type },
+                { visible: data.augslot6visible, augtype: data.augslot6type },
+
+            ].filter(entry => entry.visible !== 0 && entry !== null);
             break;
     }
     return section;
 }
 
+function drawAugSlots(canvas, data, textureX, textureY, textX, lineHeight, fontSize) {
+    let context = canvas.getContext('2d');
+    data.forEach((item, index) => {
+        const y = textureY + index * lineHeight;
+        if (item.visible != null && item.visible != 0 && item.augtype != 0) {
+            canvasUtils.drawTexture(context, textureX, y, 72, 72, "augslot");
+            canvasUtils.drawText(canvas, `Augment Type: ${item.augtype}`, fontSize, "Times New Roman", "left", (textureX + 84), y + 52, "#FFFFFF");
 
+        }
+    })
+
+}
 
 function drawLabelsAndValues(canvas, data, xLeft, xRight, startY, lineHeight, normalFontSize, heroicFontSize) {
     data.forEach((item, index) => {
@@ -105,6 +135,7 @@ function drawLabelsAndValues(canvas, data, xLeft, xRight, startY, lineHeight, no
         if (item.heroic != null) {
             canvasUtils.drawText(canvas, item.heroic, heroicFontSize, "Times New Roman", "left", (xRight + 10), (y - 4), "#c9bd85");
         }
+
     });
 }
 function getItemClasses(bitmask) {
@@ -176,6 +207,74 @@ function getItemSlots(bitmask) {
     }
     return Array.from(attachedSlots);
 }
+function getItemDiety(bitmask) {
+    const diety = ["Agnostic", "Bertoxxulous", "Brell Serilis", "Cazic Thule", "Erollsi Marr", "Bristlebane", "Innoruuk", "Karana",
+        "Mithaniel Marr", "Prexus", "Quellious", "Rallos Zek", "Rodcet Nife", "Solusek Ro", "The Tribunal", "Tunare", "Veeshan"];
+
+    const itemBitmaskSum = bitmask;
+    const attacheddiety = new Set();
+
+    for (let i = 0; i < diety.length; i++) {
+        if ((itemBitmaskSum & (1 << i)) !== 0) {
+            attacheddiety.add(diety[i]);
+        }
+
+    }
+    return Array.from(attacheddiety);
+}
+function getItemType(type) {
+    let typeString;
+    switch (type) {
+        case 0: typeString = '1H Slashing'; break;
+        case 1: typeString = '2H Slashing'; break;
+        case 3: typeString = '1H Blunt'; break;
+        case 4: typeString = '2H Blunt'; break;
+        case 5: typestring = 'Archery'; break;
+
+        case 7:
+        case 19: typeString = 'Throwing'; break;
+
+        case 8: typeString = 'Shield'; break;
+        case 10: typeString = 'Armor'; break;
+        case 11: typeString = 'Tradeskill'; break;
+        case 12: typeString = 'Lockpicking'; break;
+        case 14: typeString = 'Food'; break;
+        case 15: typeString = 'Drink'; break;
+
+        case 16:
+        case 17:
+        case 34:
+        case 40:
+        case 18: typeString = 'Item'; break;
+
+        case 20: typeString = 'Scroll'; break;
+        case 21: typeString = 'Potion'; break;
+        case 22: typeString = 'Arrow'; break;
+        case 23: typeString = 'Wind Instruments'; break;
+        case 24: typeString = 'Stringed Instruments'; break;
+        case 25: typeString = 'Brass Instruments'; break;
+        case 26: typeString = 'Percussion Instruments'; break;
+        case 27: typeString = 'Ammo'; break;
+        case 29: typeString = 'Jewelry'; break;
+
+        case 31:
+        case 32: typeString = 'Book'; break;
+
+        case 33:
+        case 39: typeString = 'Key'; break;
+
+        case 42: typeString = 'Poison'; break;
+        case 45: typeString = 'Hand to Hand';
+        case 52: typeString = 'Charm'; break;
+        case 53: typeString = 'Dye'; break;
+        case 54: typeString = 'Augment'; break;
+        case 55: typeString = 'Augment Solvent'; break;
+        case 56: typeString = 'Augment Distiller'; break;
+        case 58: typeString = 'Fellowship Banner Materials'; break;
+        case 63: typeString = 'Alt Currency'; break;
+    }
+    return typeString
+}
 function getItemSize(size) {
     let sizeString;
 
@@ -218,5 +317,8 @@ module.exports = {
     getItemSize: getItemSize,
     getItemWeight: getItemWeight,
     drawLabelsAndValues: drawLabelsAndValues,
-    getSectionObject: getSectionObject
+    getSectionObject: getSectionObject,
+    getItemDiety: getItemDiety,
+    drawAugSlots: drawAugSlots,
+    getItemType: getItemType
 }

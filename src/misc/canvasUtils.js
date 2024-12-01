@@ -5,7 +5,6 @@ const { readFile } = require('fs/promises');
 
 function drawFilledRect(context, posX, posY, sizeX, sizeY, color) {
     let priorFillStyle = context.fillStyle;
-    console.log(priorFillStyle);
     context.fillStyle = color;
     context.fillRect(posX, posY, sizeX, sizeY);
     context.fillStyle = priorFillStyle;
@@ -77,14 +76,10 @@ function drawCornerTriangles(canvas, size, color) {
 }
 
 function drawText(canvas, text, fontSize, fontName, alignment, xPos, yPos, color, scaleToCanvas, scaleRatio) {
-    // ctx.textAlign = "center";
     let context = canvas.getContext('2d');
     context.textAlign = alignment;
     context.font = `${fontSize}px ${fontName}`;
     context.fillStyle = color;
-    // let fontSize = 64;
-    //let font = `${fontSize}px Times New Roman`
-    //ctx.font = font;
 
     if (scaleToCanvas && context.measureText(text).width >= canvas.width) {
         context.font = `${fontSize - scaleRatio}px ${fontName}`;
