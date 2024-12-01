@@ -11,10 +11,15 @@ module.exports = {
         .setDescription('Look an item up from the database.')
         .addStringOption(option =>
             option.setName('itemname')
-                .setDescription('Item Name')),
-                
+                .setDescription('Item Name'))
+        .addBooleanOption(option =>
+            option.setName('public')
+                .setDescription('Sends item image to discord channel, not just yourself.')
+        ),
+
     run: async (client, interaction, args) => {
         let suppliedName = interaction.options.getString('itemname');
+        let sendPublic = interaction.options.getBoolean('public');
         let queryInfo;
         try {
             queryInfo = await utils.SQLQuery("SELECT * FROM `items` WHERE UPPER(name) LIKE UPPER(?)", suppliedName)
@@ -22,6 +27,6 @@ module.exports = {
             console.error(e);
         }
 
-        let reply = await drawItemImage(interaction, queryInfo[0]);
+        let reply = await drawItemImage(interaction, queryInfo[0], sendPublic);
     }
 }

@@ -11,5 +11,5 @@ const client = new BotClient();
 client.loadCommands();
 client.loadEvents();
 client.loadComponents();
-//client.deploySlashCommands();
+client.deploySlashCommands();
 client.start();

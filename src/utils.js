@@ -311,12 +311,14 @@ function getItemWeight(weight) {
 }
 
 async function getEffect(id) {
-    let effectString;
+    let effectInfo = [];
     if (id !== -1) {
         let effectName = await SQLQuery('SELECT `name` FROM `spells_new` WHERE `id` LIKE ?', id);
-        effectString = effectName[0].name;
+        let description = await SQLQuery('SELECT `value` FROM `db_str` WHERE `id` LIKE ?', id);
+        effectInfo[0] = effectName[0].name;
+        effectInfo[1] = description[0].value;
     }
-    return effectString;
+    return effectInfo;
 }
 module.exports = {
     SQLQuery: SQLQuery,

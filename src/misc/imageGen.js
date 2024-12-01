@@ -2,7 +2,8 @@ const { createCanvas, Image } = require('canvas');
 const { AttachmentBuilder } = require('discord.js')
 const { readFile } = require('fs/promises');
 const utils = require('../utils')
-const canvasUtils = require('./canvasUtils')
+const canvasUtils = require('./canvasUtils');
+const { send } = require('process');
 
 function drawTitlebar(canvas, yPos, title) {
     const context = canvas.getContext("2d");
@@ -52,17 +53,17 @@ async function drawItemInfo(canvas, data) {
     }
     flagTxt.push(utils.getItemType(data.itemtype))
 
-    let clickInfo = await utils.getEffect(data.clickeffect, );
+    let clickInfo = await utils.getEffect(data.clickeffect);
     let procInfo = await utils.getEffect(data.proceffect, data.proclevel2);
     let wornInfo = await utils.getEffect(data.worneffect);
     let focusInfo = await utils.getEffect(data.focuseffect);
 
     let itemSpellInfo = [];
     if (data.maxcharges !== -1 && data.maxcharges !== 0) itemSpellInfo.push(`Max Charges: ${data.maxcharges}\n`);
-    if (data.clickeffect !== -1) itemSpellInfo.push(`Click Effect: ${clickInfo} | Req Lvl: ${data.clicklevel2}\n`);
-    if (data.proceffect !== -1) itemSpellInfo.push(`Proc Effect: ${procInfo} | Req Lvl: ${data.proclevel2}\n`);
-    if (data.worneffect !== -1) itemSpellInfo.push(`Worn Effect: ${wornInfo}\n`);
-    if (data.focuseffect !== -1) itemSpellInfo.push(`Focus Effect: ${focusInfo}\n`);
+    if (data.clickeffect !== -1) itemSpellInfo.push(`Click Effect: ${clickInfo[0]} | Req Lvl: ${data.clicklevel2}\n${clickInfo[1]}\n\n`);
+    if (data.proceffect !== -1) itemSpellInfo.push(`Proc Effect: ${procInfo[0]} | Req Lvl: ${data.proclevel2}\n${procInfo[1]}\n\n`);
+    if (data.worneffect !== -1) itemSpellInfo.push(`Worn Effect: ${wornInfo[0]}\n${[wornInfo[1]]}\n\n`);
+    if (data.focuseffect !== -1) itemSpellInfo.push(`Focus Effect: ${focusInfo[0]}\n${[focusInfo[1]]}\n\n`);
 
 
     canvasUtils.drawStrokedRect(context, 50, 420, (canvas.width - 100), (canvas.height - 460), "#c9bd85", 6);
@@ -81,8 +82,8 @@ async function drawItemInfo(canvas, data) {
     utils.drawLabelsAndValues(canvas, utils.getSectionObject("Resists", data), centerColX, centerColWidth, midColumnY, 60, normalFontSize, heroicFontSize);
     utils.drawLabelsAndValues(canvas, utils.getSectionObject("modStats", data), rightColumnX, rightColumnWidth, midColumnY, 60, normalFontSize, heroicFontSize);
     utils.drawAugSlots(canvas, utils.getSectionObject("Augs", data), 128, 1325, 48, 90);
-    canvasUtils.drawText(canvas, itemSpellInfo.join(''), normalFontSize, "Times New Roman", "left", 128, 2000, "#FFFFFF");
-
+    //canvasUtils.drawText(canvas, itemSpellInfo.join(''), normalFontSize, "Times New Roman", "left", 128, 2000, "#FFFFFF");
+    canvasUtils.wrapText(context,itemSpellInfo.join(''),128,2000, canvas.width-128, 60 );
    
 
 }
@@ -93,7 +94,7 @@ function drawBG(context, width, height) {
     canvasUtils.drawStrokedRect(context, 0, 0, width, height, "#c9bd85", 12);
 }
 
-async function drawItemImage(interaction, data) {
+async function drawItemImage(interaction, data, sendPublic) {
     const canvas = createCanvas(1600, 2560);
     const context = canvas.getContext('2d');
 
@@ -104,7 +105,7 @@ async function drawItemImage(interaction, data) {
     await drawItemInfo(canvas, data);
 
     const attachment = new AttachmentBuilder(await canvas.toBuffer('image/png'), { name: 'profile-image.png' });
-    await interaction.reply({ files: [attachment] });
+    await interaction.reply({ files: [attachment], ephemeral: !sendPublic });
 }
 
 
