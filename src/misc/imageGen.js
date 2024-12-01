@@ -41,6 +41,11 @@ async function drawItemInfo(canvas, data) {
     if (data.magic === 1) flagTxt.push('Magic');
     if (data.attuneable === 1) flagTxt.push('Attunable');
     if (data.questitemflag === 1) flagTxt.push('Quest');
+    if (data.heirloom === 1) flagTxt.push('Heirloom');
+    if (data.notransfer === 1) flagTxt.push('No Trade');
+    if (data.nopet === 1) flagTxt.push('No Pet');
+    if (data.norent === 0) flagTxt.push('Temporary');
+
 
     if (data.deity != 0) {
         flagTxt.push(itemDeities.join(''));

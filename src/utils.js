@@ -329,5 +329,6 @@ module.exports = {
     getSectionObject: getSectionObject,
     getItemDiety: getItemDiety,
     drawAugSlots: drawAugSlots,
-    getEffect:getEffect
+    getEffect:getEffect, 
+    getItemType: getItemType
 }
