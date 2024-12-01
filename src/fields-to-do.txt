@@ -54,7 +54,7 @@
 -diety: Done
 -damage: done
 -range: done
--itemtype:
+-itemtype: done
 -delay: done
 -augslot1type: done
 -augslot2type:done
@@ -67,15 +67,16 @@
 -augslot3visible:done
 -augslot4visible:done
 -augslot5visible:done
--clicktype:
--clicklevel2:
--clickeffect:
--maxcharges:
+
+-clicklevel2: done
+-clickeffect:done
+-maxcharges: done
+-proceffect: done
+-proclevel2: done
 
 -worneffect: worn id
 -wornlevel2: worn lvl cap
--clickeffect
--proc
+
 -focuseffect: focus id
 -focuslevel2: focus cap
 
