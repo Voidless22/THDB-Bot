@@ -309,32 +309,14 @@ function getItemWeight(weight) {
     return (weight / 10).toFixed(1);
 
 }
-async function getClickEffect(id, reqLvl, maxCharges) {
-    let clickString;
+
+async function getEffect(id) {
+    let effectString;
     if (id !== -1) {
-        let clickName = await SQLQuery('SELECT `name` FROM `spells_new` WHERE `id` LIKE ?', id);
-        clickString = `Click Effect: ${clickName[0].name} | Req Lvl: ${reqLvl}`;
-        if (maxCharges != null) {
-            clickString = clickString + ` | Max Charges: ${maxCharges}`;
-        }
+        let effectName = await SQLQuery('SELECT `name` FROM `spells_new` WHERE `id` LIKE ?', id);
+        effectString = effectName[0].name;
     }
-    return clickString;
-}
-async function getProcEffect(id, reqLvl) {
-    let procString;
-    if (id !== -1) {
-        let procName = await SQLQuery('SELECT `name` FROM `spells_new` WHERE `id` LIKE ?', id);
-        procString = `Click Effect: ${procName[0].name} | Req Lvl: ${reqLvl}`;
-    }
-    return procString;
-}
-async function getWornEffect(id) {
-    let wornString;
-    if (id !== -1) {
-        let wornName = await SQLQuery('SELECT `name` FROM `spells_new` WHERE `id` LIKE ?', id);
-        wornString = `Worn Effect: ${wornName[0].name}`;
-    }
-    return wornString;
+    return effectString;
 }
 module.exports = {
     SQLQuery: SQLQuery,
@@ -347,8 +329,5 @@ module.exports = {
     getSectionObject: getSectionObject,
     getItemDiety: getItemDiety,
     drawAugSlots: drawAugSlots,
-    getItemType: getItemType,
-    getClickEffect:getClickEffect,
-    getProcEffect:getProcEffect,
-    getWornEffect:getWornEffect
+    getEffect:getEffect
 }

@@ -47,9 +47,18 @@ async function drawItemInfo(canvas, data) {
     }
     flagTxt.push(utils.getItemType(data.itemtype))
 
-    let clickInfo = await utils.getClickEffect(data.clickeffect, data.clicklevel2, data.maxCharges);
-    let procInfo = await utils.getProcEffect(data.proceffect, data.proclevel2);
-    let wornInfo = await utils.getWornEffect(data.worneffect);
+    let clickInfo = await utils.getEffect(data.clickeffect, );
+    let procInfo = await utils.getEffect(data.proceffect, data.proclevel2);
+    let wornInfo = await utils.getEffect(data.worneffect);
+    let focusInfo = await utils.getEffect(data.focuseffect);
+
+    let itemSpellInfo = [];
+    if (data.maxcharges !== -1 && data.maxcharges !== 0) itemSpellInfo.push(`Max Charges: ${data.maxcharges}\n`);
+    if (data.clickeffect !== -1) itemSpellInfo.push(`Click Effect: ${clickInfo} | Req Lvl: ${data.clicklevel2}\n`);
+    if (data.proceffect !== -1) itemSpellInfo.push(`Proc Effect: ${procInfo} | Req Lvl: ${data.proclevel2}\n`);
+    if (data.worneffect !== -1) itemSpellInfo.push(`Worn Effect: ${wornInfo}\n`);
+    if (data.focuseffect !== -1) itemSpellInfo.push(`Focus Effect: ${focusInfo}\n`);
+
 
     canvasUtils.drawStrokedRect(context, 50, 420, (canvas.width - 100), (canvas.height - 460), "#c9bd85", 6);
     canvasUtils.drawText(canvas, data.Name, 52, "Times New Roman", "left", 235, 180, "#FFFFFF");
@@ -67,16 +76,10 @@ async function drawItemInfo(canvas, data) {
     utils.drawLabelsAndValues(canvas, utils.getSectionObject("Resists", data), centerColX, centerColWidth, midColumnY, 60, normalFontSize, heroicFontSize);
     utils.drawLabelsAndValues(canvas, utils.getSectionObject("modStats", data), rightColumnX, rightColumnWidth, midColumnY, 60, normalFontSize, heroicFontSize);
     utils.drawAugSlots(canvas, utils.getSectionObject("Augs", data), 128, 1325, 48, 90);
-    if (data.clickeffect != -1) {
-        canvasUtils.drawText(canvas, clickInfo, normalFontSize, "Times New Roman", "left", 128, 2000, "#FFFFFF");
-    }
-    if (data.proceffect != -1) {
-        canvasUtils.drawText(canvas, procInfo, normalFontSize, "Times New Roman", "left", 128, 2100, "#FFFFFF");
-    }
-    if (data.worneffect != -1) {
-        canvasUtils.drawText(canvas, wornInfo, normalFontSize, "Times New Roman", "left", 128, 2200, "#FFFFFF");
-    }
-    
+    canvasUtils.drawText(canvas, itemSpellInfo.join(''), normalFontSize, "Times New Roman", "left", 128, 2000, "#FFFFFF");
+
+   
+
 }
 
 
